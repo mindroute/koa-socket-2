@@ -1,42 +1,77 @@
 
-[![Build Status](https://travis-ci.org/mattstyles/koa-socket.svg?branch=master)](https://travis-ci.org/mattstyles/koa-socket)
-[![npm version](https://badge.fury.io/js/koa-socket.svg)](https://badge.fury.io/js/koa-socket)
-[![Coverage Status](https://coveralls.io/repos/mattstyles/koa-socket/badge.svg?branch=master&service=github)](https://coveralls.io/github/mattstyles/koa-socket?branch=master)
-[![Dependency Status](https://david-dm.org/mattstyles/koa-socket.svg)](https://david-dm.org/mattstyles/koa-socket.svg)
-
-# Koa-socket
+# Koa-socket-2
 
 > Sugar for connecting socket.io to a koa instance
 
-**Koa-socket** is now compatible with koa v2 style of middleware (where context is passed as a parameter), v0.4.0 of koa-socket is the last version to support the old style of middleware.
+**Koa-socket-2** is only compatible with koa v2 style of middleware (where context is passed as a parameter).
 
-As such, koa-socket now requires **node v4.0.0** or higher although koa-socket simply attaches to the server instance so will be compatible with a koa v1 powered app.
+Koa-socket-2 requires **node v4.0.0** or higher.
 
 
 ## Installation
 
 ```sh
-npm i -S koa-socket
+npm i -S koa-socket-2
 ```
 
 ## Example
 
 ```js
-const Koa = require( 'koa' )
-const IO = require( 'koa-socket' )
+const Koa = require( 'koa' );
+const IO = require( 'koa-socket-2' );
 
-const app = new Koa()
-const io = new IO()
+const app = new Koa();
+const io = new IO();
 
-app.use( ... )
+app.use( ... );
 
-io.attach( app )
+io.attach( app );
 
 io.on( 'join', ( ctx, data ) => {
-  console.log( 'join event fired', data )
-})
+  console.log( 'join event fired', data );
+});
 
-app.listen( process.env.PORT || 3000 )
+app.listen( process.env.PORT || 3000 );
+```
+
+## HTTPS Example
+
+```js
+const Koa = require( 'koa' );
+const IO = require( 'koa-socket-2' );
+const fs = require('fs');
+
+app.server = require('https').createServer({
+  key: fs.readFileSync(...),
+  cert: fs.readFileSync(...),
+  ca: fs.readFileSync(...)
+}, app.callback());
+
+app.listen = function() {
+  app.server.listen.apply(app.server, arguments);
+  return app.server;
+}
+
+app.use(async (ctx, next) => {
+  ctx.set('Access-Control-Allow-Origin', 'null');
+  ctx.set('Access-Control-Allow-Credentials', 'true');
+  await next();
+});
+
+console.log('Server: HTTPS/TLS Enabled.');
+
+const app = new Koa();
+const io = new IO();
+
+app.use( ... );
+
+io.attach( app );
+
+io.on( 'join', ( ctx, data ) => {
+  console.log( 'join event fired', data );
+});
+
+app.listen( process.env.PORT || 3000 );
 ```
 
 ## Features
@@ -53,28 +88,31 @@ The `attach` function is used to attach the `IO` instance to the application, th
 It also re-maps `app.listen` to `app.server.listen`, so you could simply do `app.listen()`. However if you already had an `app.server` attached, it uses it instead and expects you to do `app.server.listen()` yourself.
 
 ```js
-const Koa = require( 'koa' )
-const IO = require( 'koa-socket' )
+const Koa = require( 'koa' );
+const IO = require( 'koa-socket-2' );
 
-const app = new Koa()
-const io = new IO()
+const app = new Koa();
+const io = new IO();
 
 // Attach the socket to the application
-io.attach( app )
+io.attach( app );
 
 // Socket is now available as app.io if you prefer
-app.io.on( event, eventHandler )
+app.io.on( event, eventHandler );
 
 // The raw socket.io instance is attached as app._io if you need it
 app._io.on( 'connection', sock => {
   // ...
-})
-
-// app.listen is mapped to app.server.listen, so you can just do:
-app.listen( process.env.PORT || 3000 )
+});
 
 // *If* you had manually attached an `app.server` yourself, you should do:
-app.server.listen( process.env.PORT || 3000 )
+app.listen = function() {
+  app.server.listen.apply(app.server, arguments);
+  return app.server;
+}
+
+// app.listen is mapped to app.server.listen, so you can just do:
+app.listen( process.env.PORT || 3000 );
 ```
 
 ## Middleware and event handlers
@@ -85,9 +123,9 @@ Middleware can be added in much the same way as it can be added to any regular k
 
 ```js
 io.use( async ( ctx, next ) => {
-  let start = new Date()
-  await next()
-  console.log( `response time: ${ new Date() - start }ms` )
+  let start = new Date();
+  await next();
+  console.log( `response time: ${ new Date() - start }ms` );
 })
 ```
 
@@ -96,33 +134,8 @@ There is an example in the `examples` folder, use `npm run example-babel` to fir
 
 ### Example with generator functions
 
-Koa v2 no longer supports generators so if you are using v2 then you must use `co.wrap` to have access to the generator style.
+Don't use generator functions.  Get with the times, and upgrade to Node >= 7.X.X.
 
-```js
-const Koa = require( 'koa' )
-const IO = require( 'koa-socket' )
-const co = require( 'co' )
-
-const app = new Koa()
-const io = new IO()
-
-app.use( ... )
-
-io.use( co.wrap( function *( ctx, next ) {
-  let start = new Date()
-  yield next()
-  console.log( `response time: ${ new Date() - start }ms` )
-}))
-
-io.use( ... );
-
-io.on( 'message', ( ctx, data ) => {
-  console.log( `message: ${ data }` )
-})
-
-io.attach( app )
-app.listen( 3000 );
-```
 
 ### Plain example
 
@@ -180,29 +193,29 @@ Namespaces can be defined simply by instantiating a new instance of `koaSocket` 
 const app = new Koa()
 const chat = new IO({
   namespace: 'chat'
-})
+});
 
-chat.attach( app )
+chat.attach( app );
 
 chat.on( 'message', ctx => {
-  console.log( ctx.data )
-  chat.broadcast( 'response', ... )
-})
+  console.log( ctx.data );
+  chat.broadcast( 'response', ... );
+});
 ```
 
 Namespaces also attach themselves to the `app` instance, throwing an error if the property name already exists.
 
 ```js
-const app = new Koa()
+const app = new Koa();
 const chat = new IO({
   namespace: 'chat'
-})
+});
 
-chat.attach( app )
+chat.attach( app );
 
-app.chat.use( ... )
-app.chat.on( ... )
-app.chat.broadcast( ... )
+app.chat.use( ... );
+app.chat.on( ... );
+app.chat.broadcast( ... );
 ```
 
 The attachment is configurable if you don’t want to muddy the `app` object with all your namespaces.
@@ -211,16 +224,16 @@ The attachment is configurable if you don’t want to muddy the `app` object wit
 const chat = new IO({
   namespace: 'chat',
   hidden: true
-})
+});
 
-chat.use( ... )
-chat.on( ... )
+chat.use( ... );
+chat.on( ... );
 ```
 
 Namespaces are fairly ubiquitous so they get a dirty shorthand for creating them, note that if you want to add any additional options you’ll need to use the longhand object parameter to instantiate `koaSocket`.
 
 ```js
-const chat = new IO( 'chat' )
+const chat = new IO( 'chat' );
 ```
 
 
@@ -231,8 +244,8 @@ const chat = new IO( 'chat' )
 Attaches to a koa application
 
 ```js
-io.attach( app )
-app.listen( process.env.PORT )
+io.attach( app );
+app.listen( process.env.PORT );
 ```
 
 ### .use( `Function callback` )
@@ -248,9 +261,9 @@ Middleware functions are called with `ctx` and `next`. The context is passed thr
 
 ```js
 io.use( async ( ctx, next ) {
-  console.log( 'Upstream' )
-  await next()
-  console.log( 'Downstream' )
+  console.log( 'Upstream' );
+  await next();
+  console.log( 'Downstream' );
 })
 ```
 
@@ -262,9 +275,9 @@ The callback is fired after any middleware that are attached to the instance and
 
 ```js
 io.on( 'join', ( ctx, data ) => {
-  console.log( data )
-  console.log( ctx.data, data )
-})
+  console.log( data );
+  console.log( ctx.data, data );
+});
 ```
 
 ### .off( `String event`, `Function callback` )
@@ -276,9 +289,9 @@ If the `event` is omitted then it will remove all listeners from the instance.
 If the `callback` is omitted then all callbacks for the supplied event will be removed.
 
 ```js
-io.off( 'join', onJoin )
-io.off( 'join' )
-io.off()
+io.off( 'join', onJoin );
+io.off( 'join' );
+io.off();
 ```
 
 ### .broadcast( `String event`, `data` )
