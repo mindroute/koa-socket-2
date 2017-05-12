@@ -16,21 +16,24 @@ Koa-socket-2 requires Node v4.0.0 or higher.
 npm i -S koa-socket-2
 ```
 
-## Example
+## HTTP Example
+
+Please make the world a better place and stop using unsecure channels.  If you
+absolutely must, however, then the following will get you started.
 
 ```js
-const Koa = require( 'koa' );
-const IO = require( 'koa-socket-2' );
+const Koa = require('koa');
+const IO = require('koa-socket-2');
 
 const app = new Koa();
 const io = new IO();
 
 app.use( ... );
 
-io.attach( app );
+io.attach(app);
 
-io.on( 'join', ( ctx, data ) => {
-  console.log( 'join event fired', data );
+io.on('join', (ctx, data) => {
+  console.log('join event fired', data);
 });
 
 app.listen( process.env.PORT || 3000 );
@@ -39,21 +42,12 @@ app.listen( process.env.PORT || 3000 );
 ## HTTPS Example
 
 ```js
-const Koa = require( 'koa' );
-const IO = require( 'koa-socket-2' );
+const Koa = require('koa');
+const IO = require('koa-socket-2');
 const fs = require('fs');
 
-app.server = require('https').createServer({
-  key: fs.readFileSync(...),
-  cert: fs.readFileSync(...),
-  ca: fs.readFileSync(...)
-}, app.callback());
-
-app.listen = function() {
-  app.server.listen.apply(app.server, arguments);
-  return app.server;
-}
-
+// If you want to access the HTTPS server from a local JS client for
+// development, then try this simple plugin:
 app.use(async (ctx, next) => {
   ctx.set('Access-Control-Allow-Origin', 'null');
   ctx.set('Access-Control-Allow-Credentials', 'true');
@@ -67,13 +61,18 @@ const io = new IO();
 
 app.use( ... );
 
-io.attach( app );
-
-io.on( 'join', ( ctx, data ) => {
-  console.log( 'join event fired', data );
+// Replace the "..." placeholders below with your own SSL certificate files
+io.attach(app, true, {
+  key: fs.readFileSync(...),
+  cert: fs.readFileSync(...),
+  ca: fs.readFileSync(...)
 });
 
-app.listen( process.env.PORT || 3000 );
+io.on('join', (ctx, data) => {
+  console.log('join event fired', data);
+});
+
+app.listen(process.env.PORT || 3000);
 ```
 
 ## Features

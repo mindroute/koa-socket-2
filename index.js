@@ -1,11 +1,10 @@
 
 "use strict";
 
-const http = require( 'http' )
-const socketIO = require( 'socket.io' )
-const compose = require( 'koa-compose' )
+const socketIO = require( 'socket.io' );
+const compose = require( 'koa-compose' );
 
-const Socket = require( './lib/socket' )
+const Socket = require( './lib/socket' );
 
 
 /**
@@ -19,7 +18,7 @@ module.exports = class IO {
    */
   constructor( opts ) {
     if ( opts && !(typeof opts !== 'string' || opts && typeof opts !== 'object' ) ) {
-      throw new Error( 'Incorrect argument passed to koaSocket constructor' )
+      throw new Error( 'Incorrect argument passed to koaSocket constructor' );
     }
 
     /**
@@ -27,27 +26,27 @@ module.exports = class IO {
      * evaluated with each event
      * @type <Array:Function>
      */
-    this.middleware = []
+    this.middleware = [];
 
     /**
      * Composed middleware stack
      * @type <Function>
      */
-    this.composed = null
+    this.composed = null;
 
     /**
      * All of the listeners currently added to the IO instance
      * event:callback
      * @type <Map>
      */
-    this.listeners = new Map()
+    this.listeners = new Map();
 
     /**
      * All active connections
      * id:Socket
      * @type <Map>
      */
-    this.connections = new Map()
+    this.connections = new Map();
 
     /**
      * Configuration options
@@ -56,7 +55,7 @@ module.exports = class IO {
     if ( typeof opts === 'string' ) {
       opts = {
         namespace: opts
-      }
+      };
     }
     this.opts = Object.assign({
       /**
@@ -79,24 +78,26 @@ module.exports = class IO {
         * @default {}
         */
        ioOptions: {}
-    }, opts )
+    }, opts );
 
     /**
      * Holds the socketIO connection
      * @type <Socket.IO>
      */
-    this.socket = null
+    this.socket = null;
 
     // Bind handlers
-    this.onConnection = this.onConnection.bind( this )
-    this.onDisconnect = this.onDisconnect.bind( this )
+    this.onConnection = this.onConnection.bind( this );
+    this.onDisconnect = this.onDisconnect.bind( this );
   }
 
   /**
    * Attach to a koa application
    * @param app <Koa app> the koa app to use
+   * @param https <Boolean> whether to activate HTTPS
    */
-  attach( app ) {
+  attach( app, https, opts ) {
+    let http = https ? require('https') : require('http');
 
     if ( app.server && app.server.constructor.name != 'Server' ) {
       throw new Error( 'app.server already exists but it\'s not an http server' );
@@ -104,12 +105,12 @@ module.exports = class IO {
 
     if ( !app.server ) {
       // Create a server if it doesn't already exists
-      app.server = http.createServer( app.callback() )
+      app.server = https ? http.createServer(opts || {}, app.callback()) : http.createServer(app.callback());
 
       // Patch `app.listen()` to call `app.server.listen()`
       app.listen = function listen(){
-        app.server.listen.apply( app.server, arguments )
-        return app.server
+        app.server.listen.apply( app.server, arguments );
+        return app.server;
       }
     }
 
@@ -117,30 +118,30 @@ module.exports = class IO {
       // Without a namespace we’ll use the default, but .io already exists meaning
       // the default is taken already
       if ( !this.opts.namespace ) {
-        throw new Error( 'Socket failed to initialise::Instance may already exist' )
+        throw new Error( 'Socket failed to initialise::Instance may already exist' );
       }
 
-      this.attachNamespace( app, this.opts.namespace )
-      return
+      this.attachNamespace( app, this.opts.namespace );
+      return;
     }
 
     if ( this.opts.hidden && !this.opts.namespace ) {
-      throw new Error( 'Default namespace can not be hidden' )
+      throw new Error( 'Default namespace can not be hidden' );
     }
 
-    app._io = new socketIO( app.server, this.opts.ioOptions )
+    app._io = new socketIO( app.server, this.opts.ioOptions );
 
     if ( this.opts.namespace ) {
-      this.attachNamespace( app, this.opts.namespace )
-      return
+      this.attachNamespace( app, this.opts.namespace );
+      return;
     }
 
     // Attach default namespace
-    app.io = this
+    app.io = this;
 
     // If there is no namespace then connect using the default
-    this.socket = app._io
-    this.socket.on( 'connection', this.onConnection )
+    this.socket = app._io;
+    this.socket.on( 'connection', this.onConnection );
   }
 
   /**
@@ -150,21 +151,21 @@ module.exports = class IO {
    */
   attachNamespace( app, id ) {
     if ( !app._io ) {
-      throw new Error( 'Namespaces can only be attached once a socketIO instance has been attached' )
+      throw new Error( 'Namespaces can only be attached once a socketIO instance has been attached' );
     }
 
-    this.socket = app._io.of( id )
-    this.socket.on( 'connection', this.onConnection )
+    this.socket = app._io.of( id );
+    this.socket.on( 'connection', this.onConnection );
 
     if ( this.opts.hidden ) {
-      return
+      return;
     }
 
     if ( app[ id ] ) {
-      throw new Error( 'Namespace ' + id + ' already attached to koa instance' )
+      throw new Error( 'Namespace ' + id + ' already attached to koa instance' );
     }
 
-    app[ id ] = this
+    app[ id ] = this;
   }
 
   /**
@@ -172,12 +173,12 @@ module.exports = class IO {
    * @param fn <Function> the middleware function to execute
    */
   use( fn ) {
-    this.middleware.push( fn )
-    this.composed = compose( this.middleware )
+    this.middleware.push( fn );
+    this.composed = compose( this.middleware );
 
-    this.updateConnections()
+    this.updateConnections();
 
-    return this
+    return this;
   }
 
   /**
@@ -187,19 +188,19 @@ module.exports = class IO {
    * @return this
    */
   on( event, handler ) {
-    let listeners = this.listeners.get( event )
+    let listeners = this.listeners.get( event );
 
     // If this is a new event then just set it
     if ( !listeners ) {
-      this.listeners.set( event, [ handler ] )
-      this.updateConnections()
-      return this
+      this.listeners.set( event, [ handler ] );
+      this.updateConnections();
+      return this;
     }
 
     listeners.push( handler )
-    this.listeners.set( event, listeners )
-    this.updateConnections()
-    return this
+    this.listeners.set( event, listeners );
+    this.updateConnections();
+    return this;
   }
 
   /**
@@ -210,29 +211,29 @@ module.exports = class IO {
    */
   off( event, handler ) {
     if ( !event ) {
-      this.listeners = new Map()
-      this.updateConnections()
-      return this
+      this.listeners = new Map();
+      this.updateConnections();
+      return this;
     }
 
     if ( !handler ) {
-      this.listeners.delete( event )
-      this.updateConnections()
-      return this
+      this.listeners.delete( event );
+      this.updateConnections();
+      return this;
     }
 
-    let listeners = this.listeners.get( event )
-    let i = listeners.length - 1
+    let listeners = this.listeners.get( event );
+    let i = listeners.length - 1;
     while( i ) {
       if ( listeners[ i ] === handler ) {
-        break
+        break;
       }
-      i--
+      i--;
     }
-    listeners.splice( i, 1 )
+    listeners.splice( i, 1 );
 
-    this.updateConnections()
-    return this
+    this.updateConnections();
+    return this;
   }
 
   /**
@@ -242,8 +243,8 @@ module.exports = class IO {
    */
   broadcast( event, data ) {
     this.connections.forEach( ( socket, id ) => {
-      socket.emit( event, data )
-    })
+      socket.emit( event, data );
+    });
   }
 
   /**
@@ -255,21 +256,21 @@ module.exports = class IO {
    */
   onConnection( sock ) {
     // let instance = new Socket( sock, this.listeners, this.middleware )
-    let instance = new Socket( sock, this.listeners, this.composed )
-    this.connections.set( sock.id, instance )
+    let instance = new Socket( sock, this.listeners, this.composed );
+    this.connections.set( sock.id, instance );
     sock.on( 'disconnect', () => {
-      this.onDisconnect( sock )
-    })
+      this.onDisconnect( sock );
+    });
 
     // Trigger the connection event if attached to the socket listener map
-    let handlers = this.listeners.get( 'connection' )
+    let handlers = this.listeners.get( 'connection' );
     if ( handlers ) {
       handlers.forEach( handler => {
         handler({
           event: 'connection',
           data: instance,
           socket: instance.socket
-        }, instance.id )
+        }, instance.id );
       })
     }
   }
@@ -281,7 +282,7 @@ module.exports = class IO {
    * @private
    */
   onDisconnect( sock ) {
-    this.connections.delete( sock.id )
+    this.connections.delete( sock.id );
   }
 
   /**
@@ -290,7 +291,7 @@ module.exports = class IO {
    */
   updateConnections() {
     this.connections.forEach( connection => {
-      connection.update( this.listeners, this.composed )
-    })
+      connection.update( this.listeners, this.composed );
+    });
   }
 }

@@ -1,6 +1,6 @@
 {
   "name": "koa-socket-2",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Koa meets socket.io connected socket",
   "main": "index.js",
   "scripts": {
@@ -20,7 +20,7 @@
   "engines": {
     "node": ">= 4"
   },
-  "repository": "ambelovsky/koa-socket",
+  "repository": "ambelovsky/koa-socket-2",
   "author": "Aaron Belovsky (Originally: Matt Styles)",
   "license": "MIT",
   "dependencies": {
