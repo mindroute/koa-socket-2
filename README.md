@@ -54,8 +54,6 @@ app.use(async (ctx, next) => {
   await next();
 });
 
-console.log('Server: HTTPS/TLS Enabled.');
-
 const app = new Koa();
 const io = new IO();
 
@@ -67,6 +65,8 @@ io.attach(app, true, {
   cert: fs.readFileSync(...),
   ca: fs.readFileSync(...)
 });
+
+console.log('Server: HTTPS/TLS Enabled.');
 
 io.on('join', (ctx, data) => {
   console.log('join event fired', data);
