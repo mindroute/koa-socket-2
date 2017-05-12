@@ -3,9 +3,11 @@
 
 > Sugar for connecting socket.io to a koa instance
 
-**Koa-socket-2** is only compatible with koa v2 style of middleware (where context is passed as a parameter).
+**Koa-socket-2 uses socket.io v2.0.1.  You must connect to a koa-socket-2 server with a socket.io v2 client.**
 
-Koa-socket-2 requires **node v4.0.0** or higher.
+Koa-socket-2 is only compatible with koa v2 style of middleware (where context is passed as a parameter).
+
+Koa-socket-2 requires Node v4.0.0 or higher.
 
 
 ## Installation
