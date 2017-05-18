@@ -295,9 +295,19 @@ io.off( 'join' );
 io.off();
 ```
 
-### .broadcast( `String event`, `data` )
+### .broadcast.emit( `String event`, `data` )
 
 Sends a message to all connections.
+
+
+### .volatile.emit( `String event`, `data` )
+
+Sends a message without ensuring delivery.
+
+
+### .compress(true).emit( `String event`, `data` )
+
+Activates per-message compression.
 
 
 ## Running tests
