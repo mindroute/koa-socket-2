@@ -182,7 +182,7 @@ module.exports = class IO {
   }
 
   /**
-   * Adds a new listeners to the stack
+   * Adds a new listener to the stack
    * @param event <String> the event id
    * @param handler <Function> the callback to execute
    * @return this

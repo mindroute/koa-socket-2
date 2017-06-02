@@ -32,8 +32,8 @@ app.use( ... );
 
 io.attach(app);
 
-io.on('join', (ctx, data) => {
-  console.log('join event fired', data);
+io.on('message', (ctx, data) => {
+  console.log('client sent data to message endpoint', data);
 });
 
 app.listen( process.env.PORT || 3000 );
@@ -68,8 +68,8 @@ io.attach(app, true, {
 
 console.log('Server: HTTPS/TLS Enabled.');
 
-io.on('join', (ctx, data) => {
-  console.log('join event fired', data);
+io.on('message', (ctx, data) => {
+  console.log('client sent data to message endpoint', data);
 });
 
 app.listen(process.env.PORT || 3000);
@@ -275,7 +275,7 @@ Attaches a callback to an event.
 The callback is fired after any middleware that are attached to the instance and is called with the `ctx` object and the `data` that triggered the event. The `data` can also be found on the `ctx`, the only potential difference is that `data` is the raw `data` emitted with the event trigger whilst `ctx.data` could have been mutated within the middleware stack.
 
 ```js
-io.on( 'join', ( ctx, data ) => {
+io.on( 'message', ( ctx, data ) => {
   console.log( data );
   console.log( ctx.data, data );
 });
@@ -290,8 +290,8 @@ If the `event` is omitted then it will remove all listeners from the instance.
 If the `callback` is omitted then all callbacks for the supplied event will be removed.
 
 ```js
-io.off( 'join', onJoin );
-io.off( 'join' );
+io.off( 'message', onChat );
+io.off( 'message' );
 io.off();
 ```
 
