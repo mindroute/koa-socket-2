@@ -300,6 +300,21 @@ io.off();
 Sends a message to all connections.
 
 
+### .join( `Room Name`, `[callback]` )
+
+Associates the connection with a room.
+
+
+### .leave( `Room Name`, `[callback]` )
+
+Disassociates the connection with a room.
+
+
+### .to( `Room Name` ).emit( `data` )
+
+Sends data to all connections in a room.
+
+
 ### .volatile.emit( `String event`, `data` )
 
 Sends a message without ensuring delivery.

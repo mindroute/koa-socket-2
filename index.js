@@ -139,6 +139,9 @@ module.exports = class IO {
     // Attach default namespace
     app.io = this;
 
+    // Shortcut to "to"
+    app.io.to = app._io.to;
+
     // If there is no namespace then connect using the default
     this.socket = app._io;
     this.socket.on( 'connection', this.onConnection );
