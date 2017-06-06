@@ -300,17 +300,17 @@ io.off();
 Sends a message to all connections.
 
 
-### .join( `Room Name`, `[callback]` )
+### .join( `String room`, `[Function callback]` )
 
 Associates the connection with a room.
 
 
-### .leave( `Room Name`, `[callback]` )
+### .leave( `String room`, `[Function callback]` )
 
 Disassociates the connection with a room.
 
 
-### .to( `Room Name` ).emit( `data` )
+### .to( `String room` ).emit( `data` )
 
 Sends data to all connections in a room.
 
