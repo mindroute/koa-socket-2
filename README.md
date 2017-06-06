@@ -238,7 +238,7 @@ const chat = new IO( 'chat' );
 ```
 
 
-## API
+## IO API
 
 ### .attach( `Koa app` )
 
@@ -300,29 +300,70 @@ io.off();
 Sends a message to all connections.
 
 
-### .join( `String room`, `[Function callback]` )
+### .to( `String room` ).emit( `String event`, `data` )
+
+Sends data to all connections in a room.
+
+```js
+io.to( 'some_room' ).emit( 'message', { hello: 'world' } );
+```
+
+
+## Socket Connection API
+
+### .rooms
+
+A list of rooms that this connection is associated with.
+
+```js
+io.on( 'message', ( ctx, data ) => {
+  console.log(ctx.socket.rooms);
+});
+```
+
+
+### .join( `String room` )
 
 Associates the connection with a room.
 
+```js
+io.on( 'message', ( ctx, data ) => {
+  ctx.socket.join('some_room');
+});
+```
 
-### .leave( `String room`, `[Function callback]` )
+
+### .leave( `String room` )
 
 Disassociates the connection with a room.
 
-
-### .to( `String room` ).emit( `data` )
-
-Sends data to all connections in a room.
+```js
+io.on( 'message', ( ctx, data ) => {
+  ctx.socket.leave( 'some_room' );
+});
+```
 
 
 ### .volatile.emit( `String event`, `data` )
 
 Sends a message without ensuring delivery.
 
+```js
+io.on( 'message', ( ctx, data ) => {
+  ctx.socket.volatile.emit( 'message', { hello: 'world' } );
+});
+```
+
 
 ### .compress(true).emit( `String event`, `data` )
 
 Activates per-message compression.
+
+```js
+io.on( 'message', ( ctx, data ) => {
+  ctx.socket.compress(true).emit( 'message', { hello: 'world' } );
+});
+```
 
 
 ## Running tests
