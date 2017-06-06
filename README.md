@@ -344,6 +344,28 @@ io.on( 'message', ( ctx, data ) => {
 ```
 
 
+### .broadcast.emit( `String event`, `data` )
+
+Sends a message to all active connections except the current connection.
+
+```js
+io.on( 'message', ( ctx, data ) => {
+  ctx.socket.broadcast.emit( 'message', { hello: 'world' } );
+});
+```
+
+
+### .broadcast.to(`String room`).emit( `String event`, `data` )
+
+Sends a message to all active connections in a room except the current connection.
+
+```js
+io.on( 'message', ( ctx, data ) => {
+  ctx.socket.broadcast.to('some_room').emit( 'message', { hello: 'world' } );
+});
+```
+
+
 ### .volatile.emit( `String event`, `data` )
 
 Sends a message without ensuring delivery.
