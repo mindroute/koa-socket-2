@@ -1,9 +1,13 @@
+const path = require('path');
+const minimist = require('minimist');
+const glob = require('glob');
 
-const path = require( 'path' )
-const minimist = require( 'minimist' )
-
-const argv = minimist( process.argv.slice( 2 ) )
+const argv = minimist( process.argv.slice( 2 ) );
 
 argv._.forEach( file => {
-  require( path.resolve( file ) )
-})
+  glob(`./${file}`, function (er, files) {
+    for(let i in files) {
+      require(path.resolve(files[i]));
+    }
+  });
+});

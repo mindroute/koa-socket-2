@@ -1,11 +1,11 @@
 
 # Koa-socket-2
 
-> Sugar for connecting socket.io to a koa instance
+> Sugar for connecting socket.io to a Koa instance
 
-**Koa-socket-2 uses socket.io v2.0.1.  You must connect to a koa-socket-2 server with a socket.io v2 client.**
+**Koa-socket-2 uses socket.io v2.0.1 and expects NodeJS v7.  You must connect to a koa-socket-2 server with a socket.io v2 client.**
 
-Koa-socket-2 is only compatible with koa v2 style of middleware (where context is passed as a parameter).
+Koa-socket-2 is only compatible with Koa v2 style of middleware (where context is passed as a parameter).
 
 Koa-socket-2 requires Node v4.0.0 or higher.
 
@@ -120,7 +120,7 @@ app.listen( process.env.PORT || 3000 );
 
 Middleware can be added in much the same way as it can be added to any regular koa instance.
 
-### Example with *async* functions (transpilation required)
+### Example with *async* functions
 
 ```js
 io.use( async ( ctx, next ) => {
@@ -129,8 +129,6 @@ io.use( async ( ctx, next ) => {
   console.log( `response time: ${ new Date() - start }ms` );
 })
 ```
-
-There is an example in the `examples` folder, use `npm run example-babel` to fire it up. The npm script relies on the `babel` require hook, which is not recommended in production.
 
 
 ### Example with generator functions
