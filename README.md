@@ -307,7 +307,7 @@ io.to( 'some_room' ).emit( 'message', { hello: 'world' } );
 ```
 
 
-## .adapter( `Object adapter` )
+### .adapter( `Object adapter` )
 
 ```js
 const redis = require('socket.io-redis');
