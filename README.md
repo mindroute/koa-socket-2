@@ -307,6 +307,14 @@ io.to( 'some_room' ).emit( 'message', { hello: 'world' } );
 ```
 
 
+## .adapter( `Object adapter` )
+
+```js
+const redis = require('socket.io-redis');
+io.adapter(redis({ host: 'localhost', port: 6379 }));
+```
+
+
 ## Socket Connection API
 
 ### .rooms

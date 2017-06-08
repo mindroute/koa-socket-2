@@ -136,11 +136,12 @@ module.exports = class IO {
       return;
     }
 
+    // Local aliases / passthrough socket.io functionality
+    this.to = app._io.to;
+    this.adapter = app._io.adapter;
+
     // Attach default namespace
     app.io = this;
-
-    // Shortcut to "to"
-    app.io.to = app._io.to;
 
     // If there is no namespace then connect using the default
     this.socket = app._io;
