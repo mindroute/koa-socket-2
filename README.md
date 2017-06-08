@@ -3,11 +3,11 @@
 
 > Sugar for connecting socket.io to a Koa instance
 
-**Koa-socket-2 uses socket.io v2.0.1 and expects NodeJS v7.  You must connect to a koa-socket-2 server with a socket.io v2 client.**
+**Koa-socket-2 uses socket.io v2.  It is recommended that you connect to a koa-socket-2 server with a socket.io v2 client.**
 
 Koa-socket-2 is only compatible with Koa v2 style of middleware (where context is passed as a parameter).
 
-Koa-socket-2 requires Node v4.0.0 or higher.
+Koa-socket-2 requires Node v7.0.0 or higher.
 
 
 ## Installation
