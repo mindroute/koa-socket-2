@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/ambelovsky/koa-socket-2.svg?branch=master)](https://travis-ci.org/ambelovsky/koa-socket-2)
 
 # Koa-socket-2
 
