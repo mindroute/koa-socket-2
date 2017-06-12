@@ -87,7 +87,7 @@ tape( 'The connection list can be used to boot a client', t => {
   t.plan( 2 );
 
   const io = new IO();
-  const app = application( io );
+  const app = application( socket );
 
   app._io.on( 'connection', sock => {
     t.equal( io.connections.size, 1, 'The connected client is registered' );
@@ -102,7 +102,9 @@ tape( 'The connection list can be used to boot a client', t => {
 
   // Do it some time in the future, and do it away from the connection socket instance
   setTimeout( () => {
-    io.socket.disconnect();
+    // use /# as id's are socket.io ids are now namespace + '#' + clientID
+    let sock = io.connections.get( '/#' + client.id );
+    sock.disconnect();
   }, 500 );
 });
 
