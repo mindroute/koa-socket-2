@@ -86,25 +86,23 @@ tape( 'A specific connection can be picked from the list of active connections',
 tape( 'The connection list can be used to boot a client', t => {
   t.plan( 2 );
 
-  const socket = new IO();
-  const app = application( socket );
+  const io = new IO();
+  const app = application( io );
 
   app._io.on( 'connection', sock => {
-    t.equal( socket.connections.size, 1, 'The connected client is registered' );
+    t.equal( io.connections.size, 1, 'The connected client is registered' );
   })
 
   const client = connection( app.server );
 
   client.on( 'disconnect', ctx => {
-    t.equal( socket.connections.size, 0, 'The client has been booted' );
+    t.equal( io.connections.size, 0, 'The client has been booted' );
   });
 
 
   // Do it some time in the future, and do it away from the connection socket instance
   setTimeout( () => {
-    // use /# as id's are socket.io ids are now namespace + '#' + clientID
-    let sock = socket.connections.get( '/#' + client.id );
-    sock.socket.disconnect();
+    io.socket.disconnect();
   }, 500 );
 });
 
