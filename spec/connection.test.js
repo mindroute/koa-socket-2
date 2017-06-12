@@ -87,7 +87,7 @@ tape( 'The connection list can be used to boot a client', t => {
   t.plan( 2 );
 
   const io = new IO();
-  const app = application( socket );
+  const app = application( io );
 
   app._io.on( 'connection', sock => {
     t.equal( io.connections.size, 1, 'The connected client is registered' );
