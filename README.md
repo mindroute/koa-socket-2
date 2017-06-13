@@ -401,6 +401,17 @@ io.on( 'message', ( ctx, data ) => {
 npm test
 ```
 
+
+## Maintainer/Contributor
+
+- [Aaron Belovsky](https://github.com/ambelovsky)
+
+
+## Original Author
+
+- [Matt Styles](https://github.com/mattstyles)
+
+
 ## License
 
 MIT
