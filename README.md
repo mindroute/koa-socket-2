@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/ambelovsky/koa-socket-2.svg?branch=master)](https://travis-ci.org/ambelovsky/koa-socket-2)
+[![NPM Version](https://img.shields.io/npm/v/koa-socket-2.svg)](https://npmjs.com/packages/koa-socket-2)
 
 # Koa-socket-2
 
