@@ -1,6 +1,6 @@
 {
   "name": "koa-socket-2",
-  "version": "1.0.11",
+  "version": "1.0.12",
   "description": "Koa meets socket.io connected socket",
   "main": "index.js",
   "scripts": {
@@ -31,7 +31,7 @@
   "license": "MIT",
   "dependencies": {
     "koa-compose": "^4.0.0",
-    "socket.io": "^2.0.2"
+    "socket.io": "^2.0.3"
   },
   "devDependencies": {
     "coveralls": "^2.13.1",
