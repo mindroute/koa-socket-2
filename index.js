@@ -137,7 +137,6 @@ module.exports = class IO {
     }
 
     // Local aliases / passthrough socket.io functionality
-    this.to = app._io.to;
     this.adapter = app._io.adapter;
 
     // Attach default namespace
@@ -249,6 +248,15 @@ module.exports = class IO {
     this.connections.forEach( ( socket, id ) => {
       socket.emit( event, data );
     });
+  }
+
+  /**
+   * Perform an action on a room
+   * @param room <String>
+   * @return socket <Object>
+   */
+  to( room ) {
+    return this.socket.to(room);
   }
 
   /**
