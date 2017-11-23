@@ -137,7 +137,7 @@ module.exports = class IO {
     }
 
     // Local aliases / passthrough socket.io functionality
-    this.adapter = app._io.adapter;
+    this.adapter = app._io.adapter.bind(app._io);
 
     // Attach default namespace
     app.io = this;
