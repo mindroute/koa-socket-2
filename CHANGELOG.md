@@ -1,4 +1,8 @@
 
+## 1.0.15 - 03.12.2017
+
+* _update_ bug fix for promise chaining
+
 ## 1.0.14 - 23.11.2017
 
 * _update_ bug fix for multi-node adapter support
