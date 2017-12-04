@@ -1,4 +1,8 @@
 
+## 1.0.16 - 03.12.2017
+
+* _update_ revert bug fix for promise chaining, tests failing
+
 ## 1.0.15 - 03.12.2017
 
 * _update_ bug fix for promise chaining
