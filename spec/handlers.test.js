@@ -293,7 +293,7 @@ tape( 'Middleware can manipulate the context', t => {
 
   io.use( async ( ctx, next ) => {
     ctx.foo = true
-    next()
+    await next()
   });
   io.on( 'req', ctx => {
     t.ok( ctx.foo, 'Context can be manipulated' )
