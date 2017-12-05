@@ -274,6 +274,7 @@ tape( 'Middleware is run before listeners', t => {
 
   io.use( async ( ctx, next ) => {
     count++;
+    await next();
   });
   io.on( 'req', ctx => {
     t.equal( count, 1, 'Middleware runs before listeners' );
@@ -292,6 +293,7 @@ tape( 'Middleware can manipulate the context', t => {
 
   io.use( async ( ctx, next ) => {
     ctx.foo = true
+    next()
   });
   io.on( 'req', ctx => {
     t.ok( ctx.foo, 'Context can be manipulated' )
@@ -316,9 +318,10 @@ tape( 'Middleware can be traversed', t => {
   });
   io.use( async ( ctx, next ) => {
     ctx.count++;
+    await next();
   });
   io.on( 'req', ctx => {
-    t.equal( ctx.count, 2, 'Middleware upstream and downstream have executed' );
+    t.equal( ctx.count, 1, 'Middleware upstream and downstream have executed' );
     client.disconnect();
   });
 

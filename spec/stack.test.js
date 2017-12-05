@@ -63,6 +63,7 @@ tape( 'Middleware can be added during runtime to connected clients', t => {
 
       io.use( async ( ctx, next ) => {
         ctx.foo = 'foo'
+	await next()
       });
 
       client.emit( 'req2' );
