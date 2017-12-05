@@ -1,4 +1,8 @@
 
+## 1.0.17 - 05.12.2017
+
+* _update_ improved and re-added bug fix for promise chaining (credit: ihwbox)
+
 ## 1.0.16 - 03.12.2017
 
 * _update_ revert bug fix for promise chaining, tests failing
@@ -9,7 +13,7 @@
 
 ## 1.0.14 - 23.11.2017
 
-* _update_ bug fix for multi-node adapter support
+* _update_ bug fix for multi-node adapter support (credit: ihwbox)
 
 ## 1.0.13 - 23.06.2017
 
