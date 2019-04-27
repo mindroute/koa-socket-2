@@ -13,7 +13,9 @@ Koa-socket-2 requires Node v7.0.0 or higher.
 
 ## Interested in GoLang?
 
-Google's Go language, or GoLang, allows you to write code that compiles down to binary.  It can be a very good way to build a fast SocketIO server that requires very little overhead.  If you're interested in building a SocketIO server in GoLang, take a look at [gosf.io](http://gosf.io) or [GOSF on GitHub](https://github.com/ambelovsky/gosf), the GoLang SocketIO Framework for building SocketIO API servers.
+This project helps you start a SocketIO server using Koa and NodeJS.  However, Google's Go language -- or GoLang -- allows you to write code that compiles down to binary.  It can be a very good way to take your SocketIO server to the next level by running faster and requiring less overhead than runtime environments like NodeJS.
+
+If you're interested in building a SocketIO server in GoLang, take a look at [gosf.io](http://gosf.io) or [GOSF on GitHub](https://github.com/ambelovsky/gosf), the GoLang SocketIO Framework for building SocketIO API servers.
 
 ## Installation
 
