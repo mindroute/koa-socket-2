@@ -4,9 +4,6 @@
 const socketIO = require( 'socket.io' );
 const compose = require( 'koa-compose' );
 
-const Socket = require( './lib/socket' );
-
-
 /**
  * Main IO class that handles the socket.io connections
  * @class
@@ -20,6 +17,9 @@ module.exports = class IO {
     if ( opts && !(typeof opts !== 'string' || opts && typeof opts !== 'object' ) ) {
       throw new Error( 'Incorrect argument passed to koaSocket constructor' );
     }
+
+    // app._io reference
+    this._io = null;
 
     /**
      * List of middlewares, these are composed into an execution chain and
@@ -245,9 +245,7 @@ module.exports = class IO {
    * @param data <?>
    */
   broadcast( event, data ) {
-    this.connections.forEach( ( socket, id ) => {
-      socket.emit( event, data );
-    });
+    this.connections.forEach( ( socket, id ) => socket.emit( event, data ) );
   }
 
   /**
@@ -267,23 +265,60 @@ module.exports = class IO {
    * @private
    */
   onConnection( sock ) {
-    // let instance = new Socket( sock, this.listeners, this.middleware )
-    let instance = new Socket( sock, this.listeners, this.composed );
-    this.connections.set( sock.id, instance );
-    sock.on( 'disconnect', () => {
-      this.onDisconnect( sock );
+    /**
+     * Adds a specific event and callback to this socket
+     * @param event <String>
+     * @param data <?>
+     */
+    sock._on = ( event, handler ) => sock.on( event, ( data, cb ) => {
+      let packet = {
+        event: event,
+        data: data,
+        socket: sock,
+        acknowledge: cb
+      };
+
+      if ( !this.composed ) {
+        handler( packet, data );
+        return;
+      }
+
+      this.composed( packet, () =>
+        handler( packet, data )
+      );
     });
+
+    /**
+     * Registers the new list of listeners and middleware composition
+     * @param listeners <Map> map of events and callbacks
+     * @param middleware <Function> the composed middleware
+     */
+    sock.update = ( listeners ) => {
+      sock.removeAllListeners();
+
+      listeners.forEach( ( handlers, event ) => {
+        if ( event === 'connection' ) {
+          return;
+        }
+
+        handlers.forEach( handler => sock._on( event, handler ) );
+      })
+    };
+
+    // Append listeners and composed middleware function
+    sock.update( this.listeners );
+
+    this.connections.set( sock.id, sock );
+    sock.on( 'disconnect', () => this.onDisconnect( sock ) );
 
     // Trigger the connection event if attached to the socket listener map
     let handlers = this.listeners.get( 'connection' );
     if ( handlers ) {
-      handlers.forEach( handler => {
-        handler({
-          event: 'connection',
-          data: instance,
-          socket: instance.socket
-        }, instance.id );
-      })
+      handlers.forEach( handler => handler({
+        event: 'connection',
+        data: sock,
+        socket: sock
+      }, sock.id ) );
     }
   }
 
@@ -302,8 +337,6 @@ module.exports = class IO {
    * @private
    */
   updateConnections() {
-    this.connections.forEach( connection => {
-      connection.update( this.listeners, this.composed );
-    });
+    this.connections.forEach( connection => connection.update( this.listeners, this.composed ) );
   }
 }
