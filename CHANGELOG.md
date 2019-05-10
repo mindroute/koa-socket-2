@@ -1,4 +1,9 @@
 
+## 1.1.0 - 05.09.2019
+
+* _update_ promoted Socket.IO for better API exposure
+* _update_ improved async passthrough handling
+
 ## 1.0.17 - 05.12.2017
 
 * _update_ improved and re-added bug fix for promise chaining (credit: ihwbox)
