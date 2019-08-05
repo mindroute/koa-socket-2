@@ -40,7 +40,7 @@ tape( 'Number of connections should update when a client connects', t => {
 
   socket.on( 'connection', ctx => {
     t.equal( socket.connections.size, 1, 'one connections should be one connection' );
-    ctx.socket.disconnect();
+    ctx.disconnect();
   });
   client.on( 'disconnect', ctx => {
     t.equal( socket.connections.size, 0, 'after a disconnect there should be 0 again' );
@@ -119,6 +119,6 @@ tape( 'A connection handler can be applied to the koaIO instance', t => {
 
   socket.on( 'connection', ctx => {
     t.pass( 'The socket connection handler is fired' );
-    ctx.socket.disconnect();
+    ctx.disconnect();
   });
 });
