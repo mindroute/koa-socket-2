@@ -54,12 +54,12 @@ io.on( 'connection', ctx => {
   io.broadcast( 'connections', {
     numConnections: io.connections.size
   });
-});
 
-io.on( 'disconnect', ctx => {
-  console.log( 'leave event', ctx.id );
-  io.broadcast( 'connections', {
-    numConnections: io.connections.size
+  ctx.on( 'disconnect', () => {
+    console.log( 'leave event', ctx.id );
+    io.broadcast( 'connections', {
+      numConnections: io.connections.size
+    });
   });
 });
 

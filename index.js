@@ -191,6 +191,11 @@ module.exports = class IO {
    * @return this
    */
   on( event, handler ) {
+    if(['connect', 'connection'].includes(event)) {
+      this.socket.on(event, handler);
+      return this;
+    }
+
     let listeners = this.listeners.get( event );
 
     // If this is a new event then just set it
