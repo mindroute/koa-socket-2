@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "node spec/index.js spec/*.test.js",
-    "cover": "istanbul cover --report lcovonly --print detail spec/index.js spec/*.test.js",
-    "travis": "npm run cover && cat coverage/lcov.info | coveralls",
+    "cover": "nyc npm run test",
+    "travis": "npm run cover && nyc report --reporter=text-lcov | coveralls",
     "example": "node example/server"
   },
   "keywords": [
@@ -35,11 +35,10 @@
   },
   "devDependencies": {
     "coveralls": "^3.0.0",
-    "istanbul": "^0.4.5",
-    "istanbul-harmony": "^0.3.16",
     "glob": "^7.1.6",
     "koa": "^2.7.0",
     "minimist": "^1.2.0",
+    "nyc": "^15.1.0",
     "socket.io-client": "^2.0.1",
     "tape": "^4.6.3"
   }
