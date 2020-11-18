@@ -411,6 +411,7 @@ npm test
 ## Maintainer/Contributor
 
 - [Aaron Belovsky](https://github.com/ambelovsky)
+- [Jonas Lieb](https://github.com/jojonas)
 
 
 ## Original Author
