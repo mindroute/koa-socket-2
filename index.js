@@ -129,7 +129,7 @@ module.exports = class IO {
       throw new Error( 'Default namespace can not be hidden' );
     }
 
-    app._io = new socketIO( app.server, this.opts.ioOptions );
+    app._io = socketIO( app.server, this.opts.ioOptions );
 
     if ( this.opts.namespace ) {
       this.attachNamespace( app, this.opts.namespace );

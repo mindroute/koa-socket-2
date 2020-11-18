@@ -1,12 +1,12 @@
 {
   "name": "koa-socket-2",
-  "version": "1.2.0",
+  "version": "2.0.0",
   "description": "Koa meets socket.io connected socket",
   "main": "index.js",
   "scripts": {
     "test": "node spec/index.js spec/*.test.js",
-    "cover": "istanbul cover --report lcovonly --print detail spec/index.js spec/*.test.js",
-    "travis": "npm run cover && cat coverage/lcov.info | coveralls",
+    "cover": "nyc npm run test",
+    "travis": "npm run cover && nyc report --reporter=text-lcov | coveralls",
     "example": "node example/server"
   },
   "keywords": [
@@ -31,15 +31,15 @@
   "license": "MIT",
   "dependencies": {
     "koa-compose": "^4.1.0",
-    "socket.io": "^2.2.0"
+    "socket.io": "^3.0.2"
   },
   "devDependencies": {
     "coveralls": "^3.0.0",
-    "istanbul": "^0.4.5",
-    "istanbul-harmony": "^0.3.16",
+    "glob": "^7.1.6",
     "koa": "^2.7.0",
     "minimist": "^1.2.0",
-    "socket.io-client": "^2.0.1",
+    "nyc": "^15.1.0",
+    "socket.io-client": "^3.0.2",
     "tape": "^4.6.3"
   }
 }
