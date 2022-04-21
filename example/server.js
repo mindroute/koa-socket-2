@@ -6,7 +6,11 @@ const Koa = require( 'koa' );
 const IO = require( '../' );
 
 const app = new Koa();
-const io = new IO();
+const io = new IO({
+  ioOptions: {
+    allowEIO3: true
+  }
+});
 const chat = new IO( 'chat' );
 
 io.attach( app );
