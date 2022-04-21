@@ -316,6 +316,24 @@ module.exports = class IO {
     this.connections.set( sock.id, sock );
     sock.on( 'disconnect', () => this.onDisconnect( sock ) );
 
+    sock.use((packet, next) => {
+			// Handler for wildcard
+			let handlers = this.listeners.get('*')
+			if (handlers) {
+				handlers.forEach((handler) => {
+					handler(
+						{
+							event: packet[0],
+							data: packet[1],
+							socket: instance.socket
+						},
+						instance.id
+					)
+				})
+			}
+			next()
+		})
+
     // Trigger the connection event if attached to the socket listener map
     let handlers = this.listeners.get( 'connection' );
     if ( handlers ) {
