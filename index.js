@@ -317,20 +317,24 @@ module.exports = class IO {
     sock.on( 'disconnect', () => this.onDisconnect( sock ) );
 
     sock.use((packet, next) => {
-			// Handler for wildcard
-			let handlers = this.listeners.get('*')
-			if (handlers) {
-				handlers.forEach((handler) => {
-					handler(
-						{
-							event: packet[0],
-							data: packet[1],
-							socket: instance.socket
-						},
-						instance.id
-					)
-				})
-			}
+      try {
+        // Handler for wildcard
+        let handlers = this.listeners.get('*')
+        if (handlers) {
+          handlers.forEach((handler) => {
+            handler(
+              {
+                event: packet[0],
+                data: packet[1],
+                socket: sock
+              },
+              sock.id
+            )
+          })
+        } 
+      } catch (ex) {
+        console.log(ex)
+      }
 			next()
 		})
 
