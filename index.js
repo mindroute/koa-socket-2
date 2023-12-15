@@ -99,7 +99,7 @@ module.exports = class IO {
   attach( app, https, opts ) {
     let http = https ? require('https') : require('http');
 
-    if ( app.server && app.server.constructor.name != 'Server' ) {
+    if ( app.server && !(app.server.constructor.name === 'Server' || app.server.constructor.name === 'Http2SecureServer')) {
       throw new Error( 'app.server already exists but it\'s not an http server' );
     }
 
